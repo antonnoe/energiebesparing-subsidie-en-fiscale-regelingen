@@ -1,81 +1,216 @@
-<!DOCTYPE html>
+<!-- index.html -->
+<!doctype html>
 <html lang="nl">
 <head>
   <meta charset="utf-8">
-  <title>Subsidie-routeplanner energierenovatie (2026)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="styles.css">
+  <title>Subsidie-routeplanner energierenovatie (2026) — V1.1</title>
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
 
-<div class="container">
+<div id="nlfr-subsidie-routeplanner" class="nlfr-wrap">
 
-  <h1>Subsidie-routeplanner energierenovatie (2026)</h1>
-
-  <p class="intro">
-    Indicatieve pre-check. Geen garantie, geen bedragen.
-    Doel: juiste volgorde, juiste combinaties en vooral <strong>het juiste loket</strong>.
-  </p>
-
-  <div class="warning">
-    <strong>Let op timing:</strong><br>
-    • MaPrimeRénov’: uitvoering pas <strong>na acceptatie</strong> van de aanvraag.<br>
-    • CEE: doorgaans <strong>aanmelden vóór ondertekenen</strong> van het devis.
+  <div class="nlfr-box">
+    <div class="nlfr-title">Subsidie-routeplanner energierenovatie (2026) — V1.1</div>
+    <div class="nlfr-sub">
+      Indicatieve pre-check (geen garantie, geen bedragen). Focus: <strong>juiste loketten</strong>, <strong>juiste volgorde</strong> en <strong>combinaties</strong>.
+    </div>
   </div>
 
-  <h2>1) Uw locatie</h2>
-
-  <label>Postcode (5 cijfers)</label>
-  <div class="row">
-    <input id="postcode" maxlength="5" placeholder="bijv. 62170">
-    <button onclick="zoekPostcode()">Zoek gemeente</button>
+  <div class="nlfr-callout">
+    <div class="nlfr-callout-title">Kritiek: timing (te vroeg tekenen of starten)</div>
+    <div>
+      Bij <strong>MaPrimeRénov’</strong> geldt: uitvoeren <strong>na acceptatie</strong> van uw aanvraag. In de praktijk: eerst traject en dossier, dan pas uitvoering.<br>
+      Bij <strong>CEE</strong> geldt vaak: <strong>inschrijven/aanvragen vóór ondertekenen van het devis</strong>.
+    </div>
   </div>
 
-  <div id="locatieResultaat" class="result"></div>
+  <!-- 1) Postcode -->
+  <div class="nlfr-box">
+    <div class="nlfr-h">1) Uw locatie (postcode → commune/département/région)</div>
 
-  <h2>2) Snelle situatiecheck</h2>
+    <label for="nlfr_cp" class="nlfr-label">Postcode (5 cijfers)</label>
+    <div class="nlfr-row">
+      <input id="nlfr_cp" class="nlfr-input" inputmode="numeric" maxlength="5" placeholder="Bijv. 24500">
+      <button id="nlfr_cp_btn" type="button" class="nlfr-btn">Zoek gemeente</button>
+    </div>
 
-  <label>Gebruik van de woning</label>
-  <select id="gebruik">
-    <option value="rp">Résidence principale</option>
-    <option value="second">Tweede woning</option>
-    <option value="rent">Verhuur</option>
-  </select>
+    <div id="nlfr_cp_status" class="nlfr-status"></div>
 
-  <label>Woning ouder dan 2 jaar?</label>
-  <select id="ouderDan2">
-    <option value="ja">Ja</option>
-    <option value="nee">Nee</option>
-    <option value="onbekend">Onbekend</option>
-  </select>
+    <div id="nlfr_commune_wrap" class="nlfr-hidden">
+      <label for="nlfr_commune" class="nlfr-label">Kies commune (als er meerdere zijn)</label>
+      <select id="nlfr_commune" class="nlfr-select"></select>
+    </div>
 
-  <label>Status project</label>
-  <select id="status">
-    <option value="voor">Nog niets getekend / niet gestart</option>
-    <option value="getekend">Devis getekend</option>
-    <option value="gestart">Werk gestart</option>
-  </select>
+    <div id="nlfr_geo_summary" class="nlfr-summary nlfr-hidden">
+      <div class="nlfr-summary-title">Samenvatting</div>
+      <div id="nlfr_geo_text"></div>
+    </div>
 
-  <label>Type werken</label>
-  <select id="werken">
-    <option value="schil">Isolatie / schil</option>
-    <option value="installatie">Verwarming / installatie</option>
-    <option value="combi">Combinatie</option>
-  </select>
+    <div class="nlfr-links">
+      <a class="nlfr-link-strong" href="https://france-renov.gouv.fr/preparer-projet/trouver-conseiller" target="_blank" rel="noopener">
+        Officieel loket: vind uw France Rénov’-adviseur op postcode
+      </a>
+      <div class="nlfr-help">Gebruik dit loket altijd als “waarheidsanker” (lokale regelingen wijzigen).</div>
+    </div>
+  </div>
 
-  <label>MaPrimeRénov’-traject</label>
-  <select id="mpr">
-    <option value="geste">Par geste</option>
-    <option value="ampleur">Rénovation d’ampleur</option>
-    <option value="onbekend">Onbekend</option>
-  </select>
+  <!-- 2) Intake -->
+  <div class="nlfr-box">
+    <div class="nlfr-h">2) Snelle situatiecheck</div>
 
-  <button class="primary" onclick="bereken()">Toon mijn route</button>
+    <div class="nlfr-field">
+      <label for="nlfr_usage" class="nlfr-label">Gebruik van de woning</label>
+      <select id="nlfr_usage" class="nlfr-select">
+        <option value="rp">Résidence principale (hoofdverblijf)</option>
+        <option value="second">Tweede woning</option>
+        <option value="rent">Verhuur / bailleur</option>
+        <option value="unknown">Onzeker</option>
+      </select>
+    </div>
 
-  <div id="uitkomst" class="result"></div>
+    <div class="nlfr-field">
+      <label for="nlfr_age" class="nlfr-label">Woning ouder dan 2 jaar?</label>
+      <select id="nlfr_age" class="nlfr-select">
+        <option value="yes">Ja (≥ 2 jaar)</option>
+        <option value="no">Nee (&lt; 2 jaar)</option>
+        <option value="unknown">Onzeker</option>
+      </select>
+    </div>
+
+    <div class="nlfr-field">
+      <label for="nlfr_stage" class="nlfr-label">Status project</label>
+      <select id="nlfr_stage" class="nlfr-select">
+        <option value="before">Nog niets getekend / niet gestart</option>
+        <option value="quotes">Offertes ontvangen, nog niet getekend</option>
+        <option value="signed">Devis getekend (maar nog niet gestart)</option>
+        <option value="started">Werk al gestart</option>
+      </select>
+      <div class="nlfr-help">
+        Let op: bij MaPrimeRénov’ kan een getekend devis soms nog, maar uitvoering hoort pas na acceptatie.
+      </div>
+    </div>
+
+    <div class="nlfr-field">
+      <label for="nlfr_work" class="nlfr-label">Type werken (globaal)</label>
+      <select id="nlfr_work" class="nlfr-select">
+        <option value="envelope">Schil/isolatie (dak/muren/vloer/ramen)</option>
+        <option value="vent">Ventilatie</option>
+        <option value="heat">Verwarming / warmtepomp / ketel</option>
+        <option value="combo">Combinatie / pakket (meerdere maatregelen)</option>
+        <option value="unknown">Onzeker</option>
+      </select>
+    </div>
+
+    <div class="nlfr-field">
+      <label for="nlfr_mpr_path" class="nlfr-label">MaPrimeRénov’-traject (als u dat overweegt)</label>
+      <select id="nlfr_mpr_path" class="nlfr-select">
+        <option value="geste">Par geste (1/2 maatregelen)</option>
+        <option value="ampleur">Rénovation d’ampleur (parcours accompagné)</option>
+        <option value="unknown">Onzeker</option>
+      </select>
+      <div class="nlfr-help">
+        France Rénov’ vermeldt dat MPR onder voorwaarden kan cumuleren met CEE, éco-PTZ en TVA 5,5%.
+      </div>
+    </div>
+
+    <div class="nlfr-field">
+      <label for="nlfr_heatloss" class="nlfr-label">Warmteverlies-analyse al gedaan?</label>
+      <select id="nlfr_heatloss" class="nlfr-select">
+        <option value="yes">Ja</option>
+        <option value="no">Nee</option>
+      </select>
+    </div>
+
+    <button id="nlfr_calc_btn" type="button" class="nlfr-btn-primary">
+      Toon mijn route (stoplicht + combinaties + loketten)
+    </button>
+
+    <noscript>
+      <div class="nlfr-noscript">
+        JavaScript staat uit; gebruik dan direct:
+        <a class="nlfr-link" href="https://france-renov.gouv.fr/preparer-projet/trouver-conseiller" target="_blank" rel="noopener">France Rénov’ adviseur</a>.
+      </div>
+    </noscript>
+  </div>
+
+  <!-- Results -->
+  <div id="nlfr_results" class="nlfr-hidden">
+
+    <div class="nlfr-box">
+      <div class="nlfr-h">3) Stoplicht per instrument</div>
+      <div id="nlfr_cards"></div>
+    </div>
+
+    <div class="nlfr-box">
+      <div class="nlfr-h">4) Combinaties (praktisch, zonder valse zekerheid)</div>
+
+      <div class="nlfr-callout">
+        <div class="nlfr-callout-title">Hoofdregel</div>
+        <div>
+          CEE kan (algemeen) cumuleren met MaPrimeRénov’ en éco-PTZ; France Rénov’ noemt cumul met CEE/éco-PTZ/TVA 5,5% onder voorwaarden.
+        </div>
+      </div>
+
+      <div id="nlfr_combo_block"></div>
+
+      <div class="nlfr-links">
+        <a class="nlfr-link-strong" href="https://france-renov.gouv.fr/preparer-projet/trouver-conseiller" target="_blank" rel="noopener">
+          Laat combinaties bevestigen via France Rénov’ (voorkomt misrouting)
+        </a>
+      </div>
+    </div>
+
+    <div class="nlfr-box">
+      <div class="nlfr-h">5) Lokaal (postcode) + EU-context (indirect)</div>
+
+      <div id="nlfr_local_block" class="nlfr-mb10"></div>
+
+      <div class="nlfr-mb10">
+        <a class="nlfr-link-strong" href="https://infofrankrijk.com/lokale-subsidies-voor-energierenovatie-in-frankrijk-zo-vindt-u-wat-er-geldt/" target="_blank" rel="noopener">
+          Lokale subsidies: vaste zoekstrategie (Infofrankrijk)
+        </a>
+      </div>
+
+      <div class="nlfr-eu">
+        <div class="nlfr-eu-title">EU-regelingen: meestal via gemeente/EPCI/regio</div>
+        <div class="nlfr-mb10">
+          EU-middelen zijn doorgaans bedoeld voor <strong>overheden</strong> en lokale programma’s (niet als “EU-subsidie voor uw huis”). Ze kunnen wél leiden tot lokale renovatieprogramma’s.
+        </div>
+        <ul class="nlfr-ul">
+          <li><strong>ELENA (EIB)</strong>: technische bijstand voor lokale/regionale energie-investeringen.</li>
+          <li><strong>European City Facility</strong>: steun om investeringsconcepten voor energietransitie uit te werken.</li>
+          <li><strong>ERDF</strong>: EU-cohesiefonds via regionale/nationale programma’s.</li>
+        </ul>
+        <div class="nlfr-help">
+          Praktisch: vraag bij mairie/EPCI of er een lokaal renovatieprogramma loopt, en verifieer via France Rénov’.
+        </div>
+      </div>
+    </div>
+
+    <div class="nlfr-box">
+      <div class="nlfr-h">6) Kopieerbaar actieplan</div>
+
+      <textarea id="nlfr_plan" rows="10" readonly class="nlfr-textarea"></textarea>
+
+      <div class="nlfr-row nlfr-mt10">
+        <button id="nlfr_copy_btn" type="button" class="nlfr-btn">Kopieer tekst</button>
+        <a class="nlfr-btnlink" href="https://france-renov.gouv.fr/preparer-projet/trouver-conseiller" target="_blank" rel="noopener">
+          Naar France Rénov’ adviseur
+        </a>
+      </div>
+
+      <div id="nlfr_copy_status" class="nlfr-help nlfr-mt6"></div>
+    </div>
+
+    <div class="nlfr-foot">
+      Laatste tool-check: <strong>jan 2026</strong>. Bij twijfel: laat het bevestigen via France Rénov’.
+    </div>
+  </div>
 
 </div>
 
-<script src="script.js"></script>
+<script src="./script.js"></script>
 </body>
 </html>
