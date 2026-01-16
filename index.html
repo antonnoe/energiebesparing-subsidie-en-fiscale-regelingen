@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <title>Subsidie-routeplanner energierenovatie (2026)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+
+  <h1>Subsidie-routeplanner energierenovatie (2026)</h1>
+
+  <p class="intro">
+    Indicatieve pre-check. Geen garantie, geen bedragen.
+    Doel: juiste volgorde, juiste combinaties en vooral <strong>het juiste loket</strong>.
+  </p>
+
+  <div class="warning">
+    <strong>Let op timing:</strong><br>
+    • MaPrimeRénov’: uitvoering pas <strong>na acceptatie</strong> van de aanvraag.<br>
+    • CEE: doorgaans <strong>aanmelden vóór ondertekenen</strong> van het devis.
+  </div>
+
+  <h2>1) Uw locatie</h2>
+
+  <label>Postcode (5 cijfers)</label>
+  <div class="row">
+    <input id="postcode" maxlength="5" placeholder="bijv. 62170">
+    <button onclick="zoekPostcode()">Zoek gemeente</button>
+  </div>
+
+  <div id="locatieResultaat" class="result"></div>
+
+  <h2>2) Snelle situatiecheck</h2>
+
+  <label>Gebruik van de woning</label>
+  <select id="gebruik">
+    <option value="rp">Résidence principale</option>
+    <option value="second">Tweede woning</option>
+    <option value="rent">Verhuur</option>
+  </select>
+
+  <label>Woning ouder dan 2 jaar?</label>
+  <select id="ouderDan2">
+    <option value="ja">Ja</option>
+    <option value="nee">Nee</option>
+    <option value="onbekend">Onbekend</option>
+  </select>
+
+  <label>Status project</label>
+  <select id="status">
+    <option value="voor">Nog niets getekend / niet gestart</option>
+    <option value="getekend">Devis getekend</option>
+    <option value="gestart">Werk gestart</option>
+  </select>
+
+  <label>Type werken</label>
+  <select id="werken">
+    <option value="schil">Isolatie / schil</option>
+    <option value="installatie">Verwarming / installatie</option>
+    <option value="combi">Combinatie</option>
+  </select>
+
+  <label>MaPrimeRénov’-traject</label>
+  <select id="mpr">
+    <option value="geste">Par geste</option>
+    <option value="ampleur">Rénovation d’ampleur</option>
+    <option value="onbekend">Onbekend</option>
+  </select>
+
+  <button class="primary" onclick="bereken()">Toon mijn route</button>
+
+  <div id="uitkomst" class="result"></div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
