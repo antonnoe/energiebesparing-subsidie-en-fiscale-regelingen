@@ -1,25 +1,55 @@
 function zoekPostcode() {
-  const pc = document.getElementById("postcode").value;
+  const pcRaw = document.getElementById("postcode").value || "";
+  const pc = pcRaw.replace(/\D/g, "").slice(0, 5);
+
   const out = document.getElementById("locatieResultaat");
+  out.innerHTML = "";
+
+  if (pc.length !== 5) {
+    out.innerHTML = "Vul een postcode met 5 cijfers in.";
+    return;
+  }
+
   out.innerHTML = "Zoeken…";
 
-  fetch("https://geo.api.gouv.fr/communes?codePostal=" + pc)
-    .then(r => r.json())
+  const url =
+    "https://geo.api.gouv.fr/communes?codePostal=" + encodeURIComponent(pc) +
+    "&fields=nom,code,departement,region&format=json";
+
+  fetch(url, { method: "GET" })
+    .then(r => {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
     .then(data => {
-      if (!data.length) {
+      if (!Array.isArray(data) || data.length === 0) {
         out.innerHTML = "Geen gemeente gevonden. Gebruik het France Rénov’-loket.";
         return;
       }
+
+      // Als er meerdere communes zijn, toon de eerste + melding
       const c = data[0];
+      const multi = data.length > 1
+        ? "<br><em>Meerdere communes bij deze postcode; dit is de eerste match.</em>"
+        : "";
+
+      const dep = c.departement ? (c.departement.nom + " (" + c.departement.code + ")") : "(onbekend)";
+      const reg = c.region ? (c.region.nom) : "(onbekend)";
+
       out.innerHTML =
         "<strong>Gemeente:</strong> " + c.nom +
-        "<br><strong>Département:</strong> " + c.departement.code +
-        "<br><strong>Regio:</strong> " + c.region.nom;
+        "<br><strong>Département:</strong> " + dep +
+        "<br><strong>Regio:</strong> " + reg +
+        multi;
     })
-    .catch(() => {
-      out.innerHTML = "Postcode-service niet bereikbaar.";
+    .catch(err => {
+      // Toon echte oorzaak compact (handig voor debug) + fallback
+      out.innerHTML =
+        "Postcode-service niet bereikbaar (" + String(err.message || err) + "). " +
+        "Gebruik het France Rénov’-loket.";
     });
 }
+
 
 function bereken() {
   const status = document.getElementById("status").value;
