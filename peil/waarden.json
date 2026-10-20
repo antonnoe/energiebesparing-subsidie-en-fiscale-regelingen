@@ -1,0 +1,45 @@
+{
+  "stand": "2026-10-20",
+  "toelichting": "Kopie van de waarden uit Peil, het parameterregister van Communities Abroad. Wordt bijgewerkt door de Peil-agent; tests/peil.test.mjs vergelijkt de tool hiermee. Parameters met status te_verifieren hebben waarde null en worden niet vergeleken.",
+  "parameters": [
+    {
+      "id": "p.fr.renov.maprimerenov_plafond",
+      "naam": "MaPrimeRénov' rénovation d'ampleur, uitgavenplafond en steunpercentages",
+      "waarde": {
+        "rénovation_ampleur_gain_2_klassen_HT": 30000,
+        "rénovation_ampleur_gain_3_of_meer_klassen_HT": 40000,
+        "percentage_van_uitgaven": {
+          "zeer_bescheiden": 80,
+          "bescheiden": 60,
+          "gemiddeld": 45,
+          "hoger": 10
+        },
+        "cumulplafond_steun_van_totaal_TTC": {
+          "zeer_bescheiden": 100,
+          "bescheiden": 90,
+          "gemiddeld": 80,
+          "hoger": 50
+        }
+      },
+      "waarde_weergave": "Rénovation d'ampleur: uitgavenplafond 30.000 EUR HT (winst 2 klassen) of 40.000 EUR HT (3 of meer klassen); premie 80/60/45/10% naar inkomen",
+      "bron_url": "https://www.service-public.gouv.fr/particuliers/vosdroits/F35083",
+      "verificatiedatum": "2026-10-19"
+    },
+    {
+      "id": "p.fr.renov.ouderdomsgrens_woning",
+      "naam": "Ouderdomsgrens van de woning voor verlaagd tarief en Eco-PTZ",
+      "waarde": 2,
+      "waarde_weergave": "Woning meer dan 2 jaar geleden voltooid bij start werken (btw 5,5% en 10%; eco-PTZ)",
+      "bron_url": "https://www.economie.gouv.fr/particuliers/impots-et-fiscalite/gerer-mes-autres-impots-et-taxes/tva-taux-reduit-pour-quels-travaux",
+      "verificatiedatum": "2026-10-19"
+    },
+    {
+      "id": "p.fr.tva.tarief_renovatie",
+      "naam": "Btw-tarief energetische renovatiewerken",
+      "waarde": 5.5,
+      "waarde_weergave": "5,5 procent op energetische renovatie van woningen ouder dan twee jaar (niet voor ketels op fossiele brandstof sinds 1-3-2025)",
+      "bron_url": "https://bofip.impots.gouv.fr/doctrine/BOI-TVA-LIQ-30-20-95",
+      "verificatiedatum": "2026-10-19"
+    }
+  ]
+}
